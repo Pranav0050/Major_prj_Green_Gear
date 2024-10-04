@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+        rel="stylesheet"
+        as="style"
+        onload="this.rel='stylesheet'"
+        href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
+    />
+    <title>GreenGear - Emissions Calculator</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        body {
+            font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-[#FFFFFF]">
+    <div class="min-h-screen flex flex-col">
+        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#F4EFE6] px-10 py-3">
+            <div class="flex items-center gap-4 text-[#1C160C]">
+                <div class="size-4">
+                    <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z" fill="currentColor"></path>
+                    </svg>
+                </div>
+                <h2 class="text-[#1C160C] text-lg font-bold leading-tight tracking-[-0.015em]">GreenGear</h2>
+            </div>
+            <button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 bg-[#F4EFE6] text-[#1C160C] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+                <span class="truncate">Back</span>
+            </button>
+        </header>
+
+        <main class="flex-grow container mx-auto px-4 py-8">
+            <h1 class="text-3xl font-bold mb-8 text-center">Carbon Emissions Calculator</h1>
+
+            <form id="emissionsForm" class="max-w-2xl mx-auto">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="flex flex-col gap-2">
+                        <label for="vehicleType" class="text-[#1C160C] font-medium">Vehicle Type</label>
+                        <select id="vehicleType" class="form-select rounded-xl border border-[#E9DFCE] bg-[#FFFFFF] text-[#1C160C] h-14 p-[15px]">
+                            <option value="sedan">Sedan</option>
+                            <option value="suv">SUV</option>
+                            <option value="truck">Truck</option>
+                            <option value="electric">Electric</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="fuelType" class="text-[#1C160C] font-medium">Fuel Type</label>
+                        <select id="fuelType" class="form-select rounded-xl border border-[#E9DFCE] bg-[#FFFFFF] text-[#1C160C] h-14 p-[15px]">
+                            <option value="gasoline">Gasoline</option>
+                            <option value="diesel">Diesel</option>
+                            <option value="electric">Electric</option>
+                            <option value="hybrid">Hybrid</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="annualMileage" class="text-[#1C160C] font-medium">Annual Mileage</label>
+                        <input type="number" id="annualMileage" placeholder="Enter annual mileage" class="form-input rounded-xl border border-[#E9DFCE] bg-[#FFFFFF] text-[#1C160C] h-14 p-[15px]">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="fuelEfficiency" class="text-[#1C160C] font-medium">Fuel Efficiency (km/L)</label>
+                        <input type="number" id="fuelEfficiency" placeholder="Enter fuel efficiency" class="form-input rounded-xl border border-[#E9DFCE] bg-[#FFFFFF] text-[#1C160C] h-14 p-[15px]">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="engineSize" class="text-[#1C160C] font-medium">Engine Size (liters)</label>
+                        <input type="number" id="engineSize" placeholder="Enter engine size" class="form-input rounded-xl border border-[#E9DFCE] bg-[#FFFFFF] text-[#1C160C] h-14 p-[15px]">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="vehicleAge" class="text-[#1C160C] font-medium">Vehicle Age (years)</label>
+                        <input type="number" id="vehicleAge" placeholder="Enter vehicle age" class="form-input rounded-xl border border-[#E9DFCE] bg-[#FFFFFF] text-[#1C160C] h-14 p-[15px]">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="passengers" class="text-[#1C160C] font-medium">Average Number of Passengers</label>
+                        <input type="number" id="passengers" placeholder="Enter average number of passengers" class="form-input rounded-xl border border-[#E9DFCE] bg-[#FFFFFF] text-[#1C160C] h-14 p-[15px]">
+                    </div>
+                </div>
+
+                <button type="submit" class="mt-8 w-full flex justify-center items-center rounded-full h-12 px-5 bg-[#019863] text-[#FFFFFF] text-base font-bold leading-normal tracking-[0.015em]">
+                    <span class="truncate">Calculate Emissions</span>
+                </button>
+            </form>
+
+            <div id="emissionsResult" class="mt-12 hidden">
+                <h2 class="text-2xl font-bold mb-6 text-center">Your Carbon Emissions</h2>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div class="flex flex-col gap-2 rounded-xl p-6 border border-[#E9DFCE]">
+                        <p class="text-[#1C160C] text-base font-medium leading-normal">CO2 Emissions (Year)</p>
+                        <p id="co2EmissionsYear" class="text-[#1C160C] tracking-light text-2xl font-bold leading-tight">-- Tons</p>
+                    </div>
+                    <div class="flex flex-col gap-2 rounded-xl p-6 border border-[#E9DFCE]">
+                        <p class="text-[#1C160C] text-base font-medium leading-normal">CO2 Emissions (6 Months)</p>
+                        <p id="co2Emissions6Months" class="text-[#1C160C] tracking-light text-2xl font-bold leading-tight">-- Tons</p>
+                    </div>
+                    <div class="flex flex-col gap-2 rounded-xl p-6 border border-[#E9DFCE]">
+                        <p class="text-[#1C160C] text-base font-medium leading-normal">CO2 Emissions (Month)</p>
+                        <p id="co2EmissionsMonth" class="text-[#1C160C] tracking-light text-2xl font-bold leading-tight">-- Tons</p>
+                    </div>
+                    <div class="flex flex-col gap-2 rounded-xl p-6 border border-[#E9DFCE]">
+                        <p class="text-[#1C160C] text-base font-medium leading-normal">CO2 Emissions (Day)</p>
+                        <p id="co2EmissionsDay" class="text-[#1C160C] tracking-light text-2xl font-bold leading-tight">-- Tons</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add this new section for the comparison diagram -->
+            <div id="emissionComparison" class="mt-12 hidden">
+                <h2 class="text-2xl font-bold mb-6 text-center">Emissions Comparison</h2>
+                <div class="flex flex-col items-center">
+                    <div class="w-full max-w-md bg-gray-200 rounded-full h-6 mb-4">
+                        <div id="userEmissionBar" class="bg-red-600 h-6 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <p id="userEmissionLabel" class="text-sm font-medium text-gray-500">Your Vehicle: 0 Tons CO2/year</p>
+                    
+                    <div class="w-full max-w-md bg-gray-200 rounded-full h-6 mt-4 mb-4">
+                        <div id="optimalEmissionBar" class="bg-green-600 h-6 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <p id="optimalEmissionLabel" class="text-sm font-medium text-gray-500">New Optimal Vehicle: 0 Tons CO2/year</p>
+                </div>
+            </div>
+
+            <div id="suggestions" class="mt-12">
+                <h2 class="text-2xl font-bold mb-6 text-center">Suggestions for Improvement</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Suggestions will be dynamically inserted here -->
+                </div>
+            </div>
+        </main>
+
+        <footer class="bg-[#F4EFE6] py-4">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-around">
+                    <a href="community.html" class="text-[#A18249] text-sm font-bold">Community</a>
+                    <a href="company.html" class="text-[#A18249] text-sm font-bold">Company</a>
+                    <a href="maps.html" class="text-[#A18249] text-sm font-bold">Maps</a>
+                    <a href="marketplace.html" class="text-[#A18249] text-sm font-bold">Market</a>
+                    <a href="calculator.html" class="text-[#1C160C] text-sm font-bold">Calculator</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+    // Gradient Boosting Model
+    class GradientBoostingModel {
+        constructor() {
+            // These would normally be learned from training data
+            this.featureImportance = {
+                vehicleType: 0.2,
+                fuelType: 0.3,
+                annualMileage: 0.25,
+                fuelEfficiency: 0.15,
+                engineSize: 0.05,
+                vehicleAge: 0.03,
+                passengers: 0.02
+            };
+            this.baseEmission = 5; // tons of CO2 per year
+        }
+
+        predict(features) {
+            let emission = this.baseEmission;
+
+            // Adjust emission based on vehicle type
+            const vehicleTypeFactors = { sedan: 1, suv: 1.5, truck: 2, electric: 0.1 };
+            emission *= vehicleTypeFactors[features.vehicleType];
+
+            // Adjust emission based on fuel type
+            const fuelTypeFactors = { gasoline: 1, diesel: 1.1, electric: 0.2, hybrid: 0.7 };
+            emission *= fuelTypeFactors[features.fuelType];
+
+            // Adjust emission based on annual mileage
+            emission *= (features.annualMileage / 10000);
+
+            // Adjust emission based on fuel efficiency (inverse relationship)
+            // Convert km/L to mpg for the calculation
+            const mpg = features.fuelEfficiency * 2.35214;
+            emission *= (30 / mpg);
+
+            // Small adjustments for other factors
+            emission *= (1 + (features.engineSize - 2) * 0.05);
+            emission *= (1 + features.vehicleAge * 0.01);
+            emission /= Math.sqrt(features.passengers);
+
+            return emission;
+        }
+    }
+
+    const gradientBoostingModel = new GradientBoostingModel();
+
+    document.getElementById('emissionsForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const features = {
+            vehicleType: document.getElementById('vehicleType').value,
+            fuelType: document.getElementById('fuelType').value,
+            annualMileage: parseFloat(document.getElementById('annualMileage').value),
+            fuelEfficiency: parseFloat(document.getElementById('fuelEfficiency').value),
+            engineSize: parseFloat(document.getElementById('engineSize').value),
+            vehicleAge: parseFloat(document.getElementById('vehicleAge').value),
+            passengers: parseFloat(document.getElementById('passengers').value)
+        };
+
+        const emissions = gradientBoostingModel.predict(features);
+
+        // Update the UI with the calculated emissions
+        document.getElementById('co2EmissionsYear').textContent = emissions.toFixed(2) + ' Tons';
+        document.getElementById('co2Emissions6Months').textContent = (emissions / 2).toFixed(2) + ' Tons';
+        document.getElementById('co2EmissionsMonth').textContent = (emissions / 12).toFixed(2) + ' Tons';
+        document.getElementById('co2EmissionsDay').textContent = (emissions / 365).toFixed(2) + ' Tons';
+
+        document.getElementById('emissionsResult').classList.remove('hidden');
+
+        // Update the comparison diagram
+        updateEmissionComparison(emissions);
+
+        // Generate suggestions based on emissions
+        generateSuggestions(emissions, features.vehicleType, features.fuelType);
+    });
+
+    function generateSuggestions(emissions, vehicleType, fuelType) {
+        const suggestions = [];
+
+        if (emissions > 4) {
+            suggestions.push({
+                title: "Use public transit",
+                description: "Save up to 1.7 tons of CO2/year",
+                image: "https://cdn.usegalileo.ai/sdxl10/5d51a2e0-e0a2-4e18-a136-13d08b5f61c8.png"
+            });
+        }
+
+        if (emissions > 3) {
+            suggestions.push({
+                title: "Carpool with friends",
+                description: "Save up to 2.8 tons of CO2/year",
+                image: "https://cdn.usegalileo.ai/sdxl10/9f550320-ca99-4344-8df2-664bbc04ad6b.png"
+            });
+        }
+
+        if (fuelType !== 'electric') {
+            suggestions.push({
+                title: "Consider an electric vehicle",
+                description: "Reduce your carbon footprint significantly",
+                image: "https://cdn.usegalileo.ai/sdxl10/87039ffc-e46a-4fc1-a4e2-c09f6455c8c8.png"
+            });
+        }
+
+        if (vehicleType === 'suv' || vehicleType === 'truck') {
+            suggestions.push({
+                title: "Switch to a more efficient vehicle",
+                description: "Cut your emissions by up to 50%",
+                image: "https://cdn.usegalileo.ai/sdxl10/87039ffc-e46a-4fc1-a4e2-c09f6455c8c8.png"
+            });
+        }
+
+        // Display suggestions
+        const suggestionsContainer = document.getElementById('suggestions');
+        suggestionsContainer.innerHTML = ''; // Clear previous suggestions
+
+        suggestions.forEach(suggestion => {
+            const suggestionElement = document.createElement('div');
+            suggestionElement.className = 'flex flex-col gap-3 pb-3';
+            suggestionElement.innerHTML = `
+                <div
+                    class="w-full h-48 bg-center bg-no-repeat bg-cover rounded-xl"
+                    style='background-image: url("${suggestion.image}");'
+                ></div>
+                <div>
+                    <p class="text-[#1C160C] text-base font-medium leading-normal">${suggestion.title}</p>
+                    <p class="text-[#A18249] text-sm font-normal leading-normal">${suggestion.description}</p>
+                </div>
+            `;
+            suggestionsContainer.appendChild(suggestionElement);
+        });
+    }
+
+    function updateEmissionComparison(userEmissions) {
+        const optimalEmissions = 2.5; // Assuming 2.5 tons CO2/year for a new, efficient vehicle
+        const maxEmissions = Math.max(userEmissions, optimalEmissions);
+
+        const userBarWidth = (userEmissions / maxEmissions) * 100;
+        const optimalBarWidth = (optimalEmissions / maxEmissions) * 100;
+
+        document.getElementById('userEmissionBar').style.width = `${userBarWidth}%`;
+        document.getElementById('optimalEmissionBar').style.width = `${optimalBarWidth}%`;
+
+        document.getElementById('userEmissionLabel').textContent = `Your Vehicle: ${userEmissions.toFixed(2)} Tons CO2/year`;
+        document.getElementById('optimalEmissionLabel').textContent = `New Optimal Vehicle: ${optimalEmissions.toFixed(2)} Tons CO2/year`;
+
+        document.getElementById('emissionComparison').classList.remove('hidden');
+    }
+    </script>
+</body>
+</html>

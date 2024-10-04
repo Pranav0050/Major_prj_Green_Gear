@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+        rel="stylesheet"
+        as="style"
+        onload="this.rel='stylesheet'"
+        href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Plus+Jakarta+Sans%3Awght%40400%3B500%3B700%3B800"
+    />
+    <title>Galileo Design</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64," />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script src="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
+    <style>
+        #map { height: 400px; }
+        #destination-form {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        #poi-buttons {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+        #recent-trips {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 10px 0;
+        }
+        .trip-card {
+            flex: 0 0 auto;
+            width: 200px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body class="relative flex size-full min-h-screen flex-col bg-[#FFFFFF] group/design-root overflow-x-hidden" style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'>
+
+    <div class="layout-container flex h-full grow flex-col">
+        <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#F4EFE6] px-10 py-3">
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-4 text-[#1C160C]">
+                    <div class="size-4">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M24 45.8096C19.6865 45.8096 15.4698 44.5305 11.8832 42.134C8.29667 39.7376 5.50128 36.3314 3.85056 32.3462C2.19985 28.361 1.76794 23.9758 2.60947 19.7452C3.451 15.5145 5.52816 11.6284 8.57829 8.5783C11.6284 5.52817 15.5145 3.45101 19.7452 2.60948C23.9758 1.76795 28.361 2.19986 32.3462 3.85057C36.3314 5.50129 39.7376 8.29668 42.134 11.8833C44.5305 15.4698 45.8096 19.6865 45.8096 24L24 24L24 45.8096Z"
+                                fill="currentColor"
+                            ></path>
+                        </svg>
+                    </div>
+                    <h2 class="text-[#1C160C] text-lg font-bold leading-tight tracking-[-0.015em]">GreenGear</h2>
+                </div>
+                <div class="flex items-center gap-9">
+                    <a class="text-[#1C160C] text-sm font-medium leading-normal" href="#">State Park</a>
+                    <a class="text-[#1C160C] text-sm font-medium leading-normal" href="#">Alcatraz Island</a>
+                    <a class="text-[#1C160C] text-sm font-medium leading-normal" href="#">Golden Gate Bridge</a>
+                </div>
+            </div>
+            <div class="flex flex-1 justify-end gap-8">
+                <label class="flex flex-col min-w-40 !h-10 max-w-64">
+                    <div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+                        <div
+                            class="text-[#A18249] flex border-none bg-[#F4EFE6] items-center justify-center pl-4 rounded-l-xl border-r-0"
+                            data-icon="MagnifyingGlass"
+                            data-size="24px"
+                            data-weight="regular"
+                        >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path
+                                    d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"
+                                ></path>
+                            </svg>
+                        </div>
+                        <input
+                            placeholder="Search"
+                            class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#1C160C] focus:outline-0 focus:ring-0 border-none bg-[#F4EFE6] focus:border-none h-full placeholder:text-[#A18249] px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
+                            value=""
+                        />
+                    </div>
+                </label>
+                <button
+                    class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 bg-[#F4EFE6] text-[#1C160C] gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5"
+                >
+                    <div class="text-[#1C160C]" data-icon="MagnifyingGlass" data-size="20px" data-weight="regular">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" fill="currentColor" viewBox="0 0 256 256">
+                            <path d="M229.66,218.34l-50.07-50.06a88.11,88.11,0,1,0-11.31,11.31l50.06,50.07a8,8,0,0,0,11.32-11.32ZM40,112a72,72,0,1,1,72,72A72.08,72.08,0,0,1,40,112Z"></path>
+                        </svg>
+                    </div>
+                </button>
+            </div>
+        </header>
+        <div class="px-40 flex flex-1 justify-center py-5">
+            <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+                <div class="flex px-4 py-3 relative">
+                    <div id="map" class="w-full aspect-video rounded-xl"></div>
+                    <form id="destination-form">
+                        <input type="text" id="destination-input" placeholder="Enter destination">
+                        <button type="submit">Set Route</button>
+                    </form>
+                    <div id="poi-buttons">
+                        <button onclick="searchNearby('petrol station')">Find Petrol Pumps</button>
+                        <button onclick="searchNearby('auto parts')">Find Spare Parts Shops</button>
+                    </div>
+                </div>
+                <div id="recent-trips" class="flex w-full overflow-x-auto px-4 py-3">
+                    <!-- Recent trips will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="fixed bottom-0 w-full bg-white">
+        <div class="flex justify-around max-w-[960px] mx-auto">
+            <a href="community.html" class="flex-1 flex flex-col items-center py-3 text-[#A18249]">
+                <p class="text-sm font-bold">Community</p>
+            </a>
+            <a href="company.html" class="flex-1 flex flex-col items-center py-3 text-[#A18249]">
+                <p class="text-sm font-bold">Company</p>
+            </a>
+            <a href="Maps.html" class="flex-1 flex flex-col items-center py-3 text-[#A18249]" style="border-bottom: 2px solid #34C759;">
+                <p class="text-sm font-bold">Maps</p>
+            </a>
+            <a href="Marketplace.html" class="flex-1 flex flex-col items-center py-3 text-[#A18249]">
+                <p class="text-sm font-bold">Market</p>
+            </a>
+            <a href="Calculator.html" class="flex-1 flex flex-col items-center py-3 text-[#A18249]">
+                <p class="text-sm font-bold">Calculator</p>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        var map = L.map('map').setView([37.7749, -122.4194], 13);
+        
+        // Use Google Maps tiles for traffic layer
+        var googleStreets = L.tileLayer('http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}',{
+            maxZoom: 20,
+            subdomains:['mt0','mt1','mt2','mt3']
+        }).addTo(map);
+        
+        var trafficLayer = L.tileLayer('http://{s}.google.com/vt/lyrs=m@221097413,traffic&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3']
+        }).addTo(map);
+
+        var routingControl = null;
+        var geocoder = L.Control.Geocoder.nominatim();
+        var markers = L.layerGroup().addTo(map);
+
+        function setRoute(start, end) {
+            if (routingControl) {
+                map.removeControl(routingControl);
+            }
+            routingControl = L.Routing.control({
+                waypoints: [start, end],
+                routeWhileDragging: true,
+                router: L.Routing.osrmv1({
+                    serviceUrl: 'https://router.project-osrm.org/route/v1'
+                }),
+                lineOptions: {
+                    styles: [{color: 'blue', opacity: 0.6, weight: 6}]
+                },
+                createMarker: function() { return null; } // This prevents markers from being created
+            }).addTo(map);
+
+            routingControl.on('routesfound', function(e) {
+                var routes = e.routes;
+                var summary = routes[0].summary;
+                // You can display the route summary (distance, time) here if needed
+            });
+        }
+
+        // Get user's current location
+        if ("geolocation" in navigator) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
+                map.setView(userLocation, 13);
+                L.marker(userLocation).addTo(map).bindPopup('You are here').openPopup();
+            }, function(error) {
+                console.error("Error: " + error.message);
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+
+        // Handle destination form submission
+        document.getElementById('destination-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var destinationInput = document.getElementById('destination-input');
+            var destination = destinationInput.value;
+            
+            geocoder.geocode(destination, function(results) {
+                if (results.length > 0) {
+                    var latlng = results[0].center;
+                    navigator.geolocation.getCurrentPosition(function(position) {
+                        var userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
+                        setRoute(userLocation, latlng);
+                        saveTrip(userLocation, latlng, destination);
+                    });
+                } else {
+                    alert('Destination not found');
+                }
+            });
+        });
+
+        function searchNearby(query) {
+            if ("geolocation" in navigator) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var userLocation = L.latLng(position.coords.latitude, position.coords.longitude);
+                    
+                    // Clear previous markers
+                    markers.clearLayers();
+
+                    // Use Overpass API to search for nearby POIs
+                    var overpassApiUrl = `https://overpass-api.de/api/interpreter?data=[out:json];(node["amenity"="${query}"](around:5000,${userLocation.lat},${userLocation.lng}););out;`;
+
+                    fetch(overpassApiUrl)
+                        .then(response => response.json())
+                        .then(data => {
+                            data.elements.forEach(element => {
+                                var marker = L.marker([element.lat, element.lon]).addTo(markers);
+                                if (element.tags && element.tags.name) {
+                                    marker.bindPopup(element.tags.name);
+                                }
+                            });
+                            
+                            if (data.elements.length === 0) {
+                                alert('No results found nearby.');
+                            } else {
+                                map.fitBounds(markers.getBounds());
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while searching. Please try again.');
+                        });
+                }, function(error) {
+                    console.error("Error: " + error.message);
+                    alert('Unable to get your location. Please enable location services and try again.');
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        }
+
+        // Function to save a trip
+        function saveTrip(start, end, destinationName) {
+            var trips = JSON.parse(localStorage.getItem('trips') || '[]');
+            trips.push({
+                start: start,
+                end: end,
+                destination: destinationName,
+                date: new Date().toISOString()
+            });
+            localStorage.setItem('trips', JSON.stringify(trips));
+            displayRecentTrips();
+        }
+
+        // Function to display recent trips
+        function displayRecentTrips() {
+            var trips = JSON.parse(localStorage.getItem('trips') || '[]');
+            var recentTripsContainer = document.getElementById('recent-trips');
+            recentTripsContainer.innerHTML = '';
+
+            trips.slice(-5).reverse().forEach(function(trip) {
+                var tripCard = document.createElement('div');
+                tripCard.className = 'trip-card';
+                tripCard.innerHTML = `
+                    <h3>${trip.destination}</h3>
+                    <p>Date: ${new Date(trip.date).toLocaleDateString()}</p>
+                    <button onclick="loadTrip(${trip.start.lat}, ${trip.start.lng}, ${trip.end.lat}, ${trip.end.lng})">Load Trip</button>
+                `;
+                recentTripsContainer.appendChild(tripCard);
+            });
+        }
+
+        // Function to load a saved trip
+        function loadTrip(startLat, startLng, endLat, endLng) {
+            var start = L.latLng(startLat, startLng);
+            var end = L.latLng(endLat, endLng);
+            setRoute(start, end);
+        }
+
+        // Initial display of recent trips
+        displayRecentTrips();
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+VehicleType,FuelType,AnnualMileage,FuelEfficiency,EngineSize,VehicleAge,Passengers,CO2Emissions
+sedan,gasoline,15000,15,2.0,5,4,4.5
+suv,diesel,20000,12,3.0,3,5,6.0
+truck,gasoline,25000,10,4.0,8,2,8.0
+electric,electric,12000,0,0.0,1,4,0.0
+hybrid,hybrid,18000,20,1.5,2,4,3.0
+sedan,gasoline,13000,14,2.0,4,4,4.0
+suv,gasoline,22000,11,3.5,6,5,7.5
+truck,diesel,30000,8,5.0,10,3,10.0
+electric,electric,10000,0,0.0,1,2,0.0
+hybrid,gasoline,16000,18,1.8,3,4,3.5

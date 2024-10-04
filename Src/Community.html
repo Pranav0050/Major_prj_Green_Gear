@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Galileo Design - Community</title>
+    <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;700;800">
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <style>
+        .post-options-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background-color: white;
+            border: 1px solid #E9DFCE;
+            border-radius: 4px;
+            padding: 8px 0;
+            z-index: 10;
+        }
+        .post-options-menu.show {
+            display: block;
+        }
+        .post-options-menu a {
+            display: block;
+            padding: 8px 16px;
+            color: #1C160C;
+            text-decoration: none;
+        }
+        .post-options-menu a:hover {
+            background-color: #F4EFE6;
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover {
+            transform: translateY(-2px);
+        }
+        .profile-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.4);
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 8px;
+        }
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="relative flex size-full min-h-screen flex-col bg-[#FFFFFF] group/design-root overflow-x-hidden" style='font-family: "Plus Jakarta Sans", "Noto Sans", sans-serif;'>
+        <div class="layout-container flex h-full grow flex-col">
+            <header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#F4EFE6] px-10 py-3"></header>
+            <div class="px-40 flex flex-1 justify-center py-5">
+                <div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+                    <div id="posts-container">
+                        <!-- Posts will be dynamically added here -->
+                    </div>
+                    <div class="flex items-center px-4 py-3 gap-3 @container">
+                        <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 shrink-0" style='background-image: url("https://cdn.usegalileo.ai/stability/37cd6bd3-b2bb-440f-8920-19ab9846c996.png");'></div>
+                        <label class="flex flex-col min-w-40 h-12 flex-1">
+                            <div class="flex w-full flex-1 items-stretch rounded-xl h-full">
+                                <input id="share-input" placeholder="Share something with the community" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#1C160C] focus:outline-0 focus:ring-0 border-none bg-[#F4EFE6] focus:border-none h-full placeholder:text-[#A18249] px-4 rounded-r-none border-r-0 pr-2 text-base font-normal leading-normal" value="" />
+                                <div class="flex border-none bg-[#F4EFE6] items-center justify-center pr-4 rounded-r-xl border-l-0 !pr-2">
+                                    <div class="flex items-center gap-4 justify-end">
+                                        <div class="flex items-center gap-1">
+                                            <button id="share-button" class="min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-8 px-4 bg-[#019863] text-[#FFFFFF] text-sm font-medium leading-normal hidden @[480px]:block">
+                                                <span class="truncate">Share</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <footer class="flex justify-center">
+                <div class="flex max-w-[960px] flex-1 flex-col">
+                    <div class="pb-3">
+                        <div class="flex border-b border-[#E9DFCE] px-4 justify-between">
+                            <a class="nav-link flex flex-col items-center justify-center border-b-[3px] gap-1 pb-[7px] pt-2.5 flex-1" href="community.html" data-page="community">
+                                <div class="text-[#1C160C]" data-icon="Users">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M164.47,195.63a8,8,0,0,1-6.7,12.37H10.23a8,8,0,0,1-6.7-12.37,95.83,95.83,0,0,1,47.22-37.71,60,60,0,1,1,66.5,0A95.83,95.83,0,0,1,164.47,195.63Zm87.91-.15a95.87,95.87,0,0,0-47.13-37.56A60,60,0,0,0,144.7,54.59a4,4,0,0,0-1.33,6A75.83,75.83,0,0,1,147,150.53a4,4,0,0,0,1.07,5.53,112.32,112.32,0,0,1,29.85,30.83,23.92,23.92,0,0,1,3.65,16.47,4,4,0,0,0,3.95,4.64h60.3a8,8,0,0,0,7.73-5.93A8.22,8.22,0,0,0,252.38,195.48Z"></path>
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-bold leading-normal tracking-[0.015em]">Community</p>
+                            </a>
+                            <a class="nav-link flex flex-col items-center justify-center border-b-[3px] gap-1 pb-[7px] pt-2.5 flex-1" href="company.html" data-page="company">
+                                <div class="text-[#A18249]" data-icon="Buildings">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M240,208H224V96a16,16,0,0,0-16-16H144V32a16,16,0,0,0-24.88-13.32L39.12,72A16,16,0,0,0,32,85.34V208H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM208,96V208H144V96ZM48,85.34,128,32V208H48ZM112,112v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm-32,0v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm0,56v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Zm32,0v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Z"></path>
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-bold leading-normal tracking-[0.015em]">Company</p>
+                            </a>
+                            <a class="nav-link flex flex-col items-center justify-center border-b-[3px] gap-1 pb-[7px] pt-2.5 flex-1" href="maps.html" data-page="maps">
+                                <div class="text-[#A18249]" data-icon="MapTrifold">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M228.92,49.69a8,8,0,0,0-6.86-1.45L160.93,63.52,99.58,32.84a8,8,0,0,0-5.52-.6l-64,16A8,8,0,0,0,24,56V200a8,8,0,0,0,9.94,7.76l61.13-15.28,61.35,30.68A8.15,8.15,0,0,0,160,224a8,8,0,0,0,1.94-.24l64-16A8,8,0,0,0,232,200V56A8,8,0,0,0,228.92,49.69ZM104,52.94l48,24V203.06l-48-24ZM40,62.25l48-12v127.5l-48,12Zm176,131.5-48,12V78.25l48-12Z"></path>
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-bold leading-normal tracking-[0.015em]">Maps</p>
+                            </a>
+                            <a class="nav-link flex flex-col items-center justify-center border-b-[3px] gap-1 pb-[7px] pt-2.5 flex-1" href="marketplace.html" data-page="marketplace">
+                                <div class="text-[#A18249]" data-icon="ShoppingCart">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"></path>
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-bold leading-normal tracking-[0.015em]">Market</p>
+                            </a>
+                            <a class="nav-link flex flex-col items-center justify-center border-b-[3px] gap-1 pb-[7px] pt-2.5 flex-1" href="calculator.html" data-page="calculator">
+                                <div class="text-[#A18249]" data-icon="Calculator">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                        <path d="M200,32H56A24,24,0,0,0,32,56V200a24,24,0,0,0,24,24H200a24,24,0,0,0,24-24V56A24,24,0,0,0,200,32Zm8,168a8,8,0,0,1-8,8H56a8,8,0,0,1-8-8V56a8,8,0,0,1,8-8H200a8,8,0,0,1,8,8ZM76,80V64a8,8,0,0,1,16,0V80a8,8,0,0,1-16,0Zm0,40V104a8,8,0,0,1,16,0v16a8,8,0,0,1-16,0Zm88,0V104a8,8,0,0,1,16,0v16a8,8,0,0,1-16,0Zm0-40V64a8,8,0,0,1,16,0V80a8,8,0,0,1-16,0Zm-44,0V64a8,8,0,0,1,16,0V80a8,8,0,0,1-16,0Zm0,40V104a8,8,0,0,1,16,0v16a8,8,0,0,1-16,0Zm-44,44a8,8,0,0,1,8-8h88a8,8,0,0,1,0,16H84A8,8,0,0,1,76,164Zm8,24h88a8,8,0,0,1,0,16H84a8,8,0,0,1,0-16Z"></path>
+                                    </svg>
+                                </div>
+                                <p class="text-sm font-bold leading-normal tracking-[0.015em]">Calculator</p>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-xl font-bold mb-4">Edit Post</h2>
+            <textarea id="editContent" class="w-full p-2 border rounded mb-4" rows="4"></textarea>
+            <button id="saveEdit" class="bg-[#019863] text-white px-4 py-2 rounded">Save Changes</button>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 class="text-xl font-bold mb-4">Confirm Deletion</h2>
+            <p class="mb-4">Are you sure you want to delete this post?</p>
+            <button id="confirmDelete" class="bg-red-500 text-white px-4 py-2 rounded mr-2">Delete</button>
+            <button id="cancelDelete" class="bg-gray-300 text-black px-4 py-2 rounded">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const currentPage = window.location.pathname.split('/').pop().split('.')[0];
+            const shareInput = document.getElementById('share-input');
+            const shareButton = document.getElementById('share-button');
+            const postsContainer = document.getElementById('posts-container');
+            const editModal = document.getElementById('editModal');
+            const deleteModal = document.getElementById('deleteModal');
+            const editContent = document.getElementById('editContent');
+            const saveEditBtn = document.getElementById('saveEdit');
+            const confirmDeleteBtn = document.getElementById('confirmDelete');
+            const cancelDeleteBtn = document.getElementById('cancelDelete');
+            let currentEditPost = null;
+            let currentDeletePost = null;
+
+            // Navigation functionality
+            navLinks.forEach(link => {
+                const linkPage = link.getAttribute('data-page');
+                if (linkPage === currentPage) {
+                    link.classList.add('border-b-[#019863]', 'text-[#1C160C]');
+                    link.classList.remove('text-[#A18249]');
+                } else {
+                    link.classList.remove('border-b-[#019863]', 'text-[#1C160C]');
+                    link.classList.add('text-[#A18249]');
+                }
+            });
+
+            // Share functionality
+            shareButton.addEventListener('click', function() {
+                const postContent = shareInput.value.trim();
+                if (postContent) {
+                    const profileImage = document.querySelector('.bg-center.bg-no-repeat.aspect-square.bg-cover.rounded-full.size-10').style.backgroundImage.slice(5, -2);
+                    addNewPost(postContent, "Just now 0 comments 0 views", profileImage);
+                    shareInput.value = '';
+                }
+            });
+
+            // Initial posts
+            const initialPosts = [
+                {content: "How do you manage your carbon...", stats: "10-15m 67 comments 2.5k views", profileImage: "https://cdn.usegalileo.ai/stability/37cd6bd3-b2bb-440f-8920-19ab9846c996.png"},
+                {content: "What are some good electric car...", stats: "10-15m 20 comments 1.5k views", profileImage: "https://cdn.usegalileo.ai/stability/37cd6bd3-b2bb-440f-8920-19ab9846c996.png"},
+                {content: "How to invest in green companies?", stats: "10-15m 12 comments 1k views", profileImage: "https://cdn.usegalileo.ai/stability/37cd6bd3-b2bb-440f-8920-19ab9846c996.png"}
+            ];
+
+            initialPosts.forEach(post => addNewPost(post.content, post.stats, post.profileImage));
+
+            // Function to add a new post
+            function addNewPost(content, stats = "Just now 0 comments 0 views", profileImage = "https://cdn.usegalileo.ai/stability/37cd6bd3-b2bb-440f-8920-19ab9846c996.png") {
+                const postElement = document.createElement('div');
+                postElement.className = "flex items-center gap-4 bg-[#FFFFFF] px-4 min-h-[72px] py-2 justify-between";
+                postElement.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <img src="${profileImage}" alt="Profile" class="profile-icon">
+                        <div class="flex flex-col justify-center">
+                            <p class="text-[#1C160C] text-base font-medium leading-normal line-clamp-1">${content}</p>
+                            <p class="text-[#A18249] text-sm font-normal leading-normal line-clamp-2">${stats}</p>
+                        </div>
+                    </div>
+                    <div class="shrink-0 relative">
+                        <button class="post-options-button text-[#1C160C] flex size-7 items-center justify-center" data-icon="DotsThreeVertical" data-size="24px" data-weight="regular">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128ZM128,72a12,12,0,1,0-12-12A12,12,0,0,0,128,72Zm0,112a12,12,0,1,0,12,12A12,12,0,0,0,128,184Z"></path>
+                            </svg>
+                        </button>
+                        <div class="post-options-menu">
+                            <a href="#" class="edit-post">Edit</a>
+                            <a href="#" class="delete-post">Delete</a>
+                        </div>
+                    </div>
+                `;
+                postsContainer.insertBefore(postElement, postsContainer.firstChild);
+
+                // Add event listener for post options
+                const optionsButton = postElement.querySelector('.post-options-button');
+                const optionsMenu = postElement.querySelector('.post-options-menu');
+                optionsButton.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    optionsMenu.classList.toggle('show');
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function() {
+                    optionsMenu.classList.remove('show');
+                });
+
+                // Edit and Delete functionality
+                const editLink = postElement.querySelector('.edit-post');
+                const deleteLink = postElement.querySelector('.delete-post');
+
+                editLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    currentEditPost = postElement;
+                    editContent.value = postElement.querySelector('p.text-[#1C160C]').textContent;
+                    editModal.style.display = "block";
+                    optionsMenu.classList.remove('show');
+                });
+
+                deleteLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    currentDeletePost = postElement;
+                    deleteModal.style.display = "block";
+                    optionsMenu.classList.remove('show');
+                });
+            }
+
+            // Close modal functionality
+            document.querySelectorAll('.close').forEach(closeBtn => {
+                closeBtn.onclick = function() {
+                    editModal.style.display = "none";
+                    deleteModal.style.display = "none";
+                }
+            });
+
+            window.onclick = function(event) {
+                if (event.target == editModal || event.target == deleteModal) {
+                    editModal.style.display = "none";
+                    deleteModal.style.display = "none";
+                }
+            }
+
+            // Save edit functionality
+            saveEditBtn.onclick = function() {
+                if (currentEditPost) {
+                    currentEditPost.querySelector('p.text-[#1C160C]').textContent = editContent.value;
+                    editModal.style.display = "none";
+                    currentEditPost = null;
+                }
+            }
+
+            // Confirm delete functionality
+            confirmDeleteBtn.onclick = function() {
+                if (currentDeletePost) {
+                    currentDeletePost.remove();
+                    deleteModal.style.display = "none";
+                    currentDeletePost = null;
+                }
+            }
+
+            // Cancel delete functionality
+            cancelDeleteBtn.onclick = function() {
+                deleteModal.style.display = "none";
+                currentDeletePost = null;
+            }
+        });
+    </script>
+</body>
+</html>

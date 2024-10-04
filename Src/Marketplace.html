@@ -1,0 +1,396 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Marketplace</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?display=swap&amp;family=Poppins:wght@400;500;600;700&amp;family=Inter:wght@400;500;600;700"
+    />
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.22.1/full/pyodide.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .page {
+            display: none;
+        }
+        .page.active {
+            display: block;
+        }
+        .custom-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen bg-[#FFFFFF]">
+        <header class="bg-white shadow-md">
+            <div class="container mx-auto px-4 py-6 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div class="size-8">
+                        <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="#019863"></path>
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold text-[#1C160C]">Car Marketplace</h1>
+                </div>
+                <nav>
+                    <a href="#selection" onclick="showPage('selection')" class="text-[#1C160C] hover:text-[#019863] font-medium mx-4 transition duration-300">Home</a>
+                    <a href="#buy" onclick="showPage('buy')" class="text-[#1C160C] hover:text-[#019863] font-medium mx-4 transition duration-300">Buy</a>
+                    <a href="#sell" onclick="showPage('sell')" class="text-[#1C160C] hover:text-[#019863] font-medium mx-4 transition duration-300">Sell</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="container mx-auto px-4 py-8">
+            <!-- Selection Page -->
+            <div id="selection" class="page active">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-[#1C160C] mb-4">Welcome to Car Marketplace</h2>
+                    <p class="text-xl text-[#A18249] mb-8">What would you like to do today?</p>
+                    <div class="flex justify-center space-x-4">
+                        <a href="#buy" onclick="showPage('buy')" class="bg-[#019863] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#017A4E] transition duration-300">Buy a Car</a>
+                        <a href="#sell" onclick="showPage('sell')" class="bg-[#019863] text-white font-bold py-3 px-6 rounded-lg hover:bg-[#017A4E] transition duration-300">Sell a Car</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buy Page -->
+            <div id="buy" class="page">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-bold text-[#1C160C] mb-4">Find Your Dream Car</h2>
+                    <p class="text-xl text-[#A18249]">Explore our curated selection and get personalized recommendations</p>
+                </div>
+                <div class="flex flex-col lg:flex-row gap-8">
+                    <div class="w-full lg:w-2/3">
+                        <div class="flex gap-3 p-3 flex-wrap pr-4 mb-6">
+                            <button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#F4EFE6] px-6 hover:bg-[#E9DFCE] transition duration-300">
+                                <p class="text-[#1C160C] text-sm font-medium leading-normal">All cars</p>
+                            </button>
+                            <button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#F4EFE6] px-6 hover:bg-[#E9DFCE] transition duration-300">
+                                <p class="text-[#1C160C] text-sm font-medium leading-normal">Electric</p>
+                            </button>
+                            <button class="flex h-10 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#F4EFE6] px-6 hover:bg-[#E9DFCE] transition duration-300">
+                                <p class="text-[#1C160C] text-sm font-medium leading-normal">Hybrid</p>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="carListings">
+                            <!-- Car listings will be dynamically added here -->
+                        </div>
+                    </div>
+                    <div class="w-full lg:w-1/3">
+                        <div id="recommendations" class="bg-white rounded-lg custom-shadow p-6">
+                            <h3 class="text-2xl font-semibold text-[#1C160C] mb-4">Recommended for You</h3>
+                            <div id="recommendedCars" class="space-y-4">
+                                <!-- Recommended cars will be dynamically added here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sell Page -->
+            <div id="sell" class="page">
+                <h2 class="text-3xl font-bold text-[#1C160C] mb-8">List Your Car</h2>
+                <form id="listingForm" class="space-y-6 bg-white p-8 rounded-lg custom-shadow max-w-2xl mx-auto">
+                    <div>
+                        <label for="make" class="block text-sm font-medium text-[#1C160C]">Make</label>
+                        <input type="text" id="make" name="make" class="mt-1 block w-full rounded-md border-[#E9DFCE] shadow-sm focus:border-[#019863] focus:ring focus:ring-[#019863] focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="model" class="block text-sm font-medium text-[#1C160C]">Model</label>
+                        <input type="text" id="model" name="model" class="mt-1 block w-full rounded-md border-[#E9DFCE] shadow-sm focus:border-[#019863] focus:ring focus:ring-[#019863] focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="year" class="block text-sm font-medium text-[#1C160C]">Year</label>
+                        <input type="number" id="year" name="year" class="mt-1 block w-full rounded-md border-[#E9DFCE] shadow-sm focus:border-[#019863] focus:ring focus:ring-[#019863] focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="price" class="block text-sm font-medium text-[#1C160C]">Price</label>
+                        <input type="number" id="price" name="price" class="mt-1 block w-full rounded-md border-[#E9DFCE] shadow-sm focus:border-[#019863] focus:ring focus:ring-[#019863] focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="mileage" class="block text-sm font-medium text-[#1C160C]">Mileage</label>
+                        <input type="number" id="mileage" name="mileage" class="mt-1 block w-full rounded-md border-[#E9DFCE] shadow-sm focus:border-[#019863] focus:ring focus:ring-[#019863] focus:ring-opacity-50">
+                    </div>
+                    <div>
+                        <label for="fuelType" class="block text-sm font-medium text-[#1C160C]">Fuel Type</label>
+                        <select id="fuelType" name="fuelType" class="mt-1 block w-full rounded-md border-[#E9DFCE] shadow-sm focus:border-[#019863] focus:ring focus:ring-[#019863] focus:ring-opacity-50">
+                            <option value="Gasoline">Gasoline</option>
+                            <option value="Electric">Electric</option>
+                            <option value="Hybrid">Hybrid</option>
+                            <option value="Diesel">Diesel</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="transmission" class="block text-sm font-medium text-[#1C160C]">Transmission</label>
+                        <select id="transmission" name="transmission" class="mt-1 block w-full rounded-md border-[#E9DFCE] shadow-sm focus:border-[#019863] focus:ring focus:ring-[#019863] focus:ring-opacity-50">
+                            <option value="Automatic">Automatic</option>
+                            <option value="Manual">Manual</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="image" class="block text-sm font-medium text-[#1C160C]">Image URL</label>
+                        <input type="url" id="image" name="image" class="mt-1 block w-full rounded-md border-[#E9DFCE] shadow-sm focus:border-[#019863] focus:ring focus:ring-[#019863] focus:ring-opacity-50">
+                    </div>
+                    <button type="submit" class="w-full bg-[#019863] text-white font-bold py-2 px-4 rounded hover:bg-[#017A4E] transition duration-300">List Car</button>
+                </form>
+            </div>
+        </main>
+<!-- 
+        <footer class="bg-[#1C160C] text-white py-8">
+            <div class="container mx-auto px-4 text-center">
+                <div class="flex justify-center space-x-6 mb-4">
+                    <a href="#" class="hover:text-[#019863] transition duration-300">Privacy Policy</a>
+                    <a href="#" class="hover:text-[#019863] transition duration-300">Terms of Service</a>
+                </div>
+                 <p>&copy; 2023 Car Marketplace. All rights reserved.</p> 
+            </div>
+        </footer>   -->
+    </div>
+
+    <div class="flex justify-center">
+        <div class="flex max-w-[960px] flex-1 flex-col">
+            <div class="pb-3">
+                <div class="flex border-b border-[#E9DFCE] px-4 justify-between">
+                    <a class="nav-link flex flex-col items-center justify-center border-b-[3px] gap-1 pb-[7px] pt-2.5 flex-1" href="community.html" data-page="community">
+                        <div class="text-[#A18249]" data-icon="Users">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M164.47,195.63a8,8,0,0,1-6.7,12.37H10.23a8,8,0,0,1-6.7-12.37,95.83,95.83,0,0,1,47.22-37.71,60,60,0,1,1,66.5,0A95.83,95.83,0,0,1,164.47,195.63Zm87.91-.15a95.87,95.87,0,0,0-47.13-37.56A60,60,0,0,0,144.7,54.59a4,4,0,0,0-1.33,6A75.83,75.83,0,0,1,147,150.53a4,4,0,0,0,1.07,5.53,112.32,112.32,0,0,1,29.85,30.83,23.92,23.92,0,0,1,3.65,16.47,4,4,0,0,0,3.95,4.64h60.3a8,8,0,0,0,7.73-5.93A8.22,8.22,0,0,0,252.38,195.48Z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-bold leading-normal tracking-[0.015em]">Community</p>
+                    </a>
+                    <a class="nav-link flex flex-col items-center justify-center border-b-[3px] gap-1 pb-[7px] pt-2.5 flex-1" href="company.html" data-page="company">
+                        <div class="text-[#A18249]" data-icon="Buildings">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M240,208H224V96a16,16,0,0,0-16-16H144V32a16,16,0,0,0-24.88-13.32L39.12,72A16,16,0,0,0,32,85.34V208H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM208,96V208H144V96ZM48,85.34,128,32V208H48ZM112,112v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm-32,0v16a8,8,0,0,1-16,0V112a8,8,0,1,1,16,0Zm0,56v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Zm32,0v16a8,8,0,0,1-16,0V168a8,8,0,0,1,16,0Z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-bold leading-normal tracking-[0.015em]">Company</p>
+                    </a>
+                    <a class="nav-link flex flex-col items-center justify-center border-b-[3px] gap-1 pb-[7px] pt-2.5 flex-1" href="maps.html" data-page="maps">
+                        <div class="text-[#A18249]" data-icon="MapTrifold">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M228.92,49.69a8,8,0,0,0-6.86-1.45L160.93,63.52,99.58,32.84a8,8,0,0,0-5.52-.6l-64,16A8,8,0,0,0,24,56V200a8,8,0,0,0,9.94,7.76l61.13-15.28,61.35,30.68A8.15,8.15,0,0,0,160,224a8,8,0,0,0,1.94-.24l64-16A8,8,0,0,0,232,200V56A8,8,0,0,0,228.92,49.69ZM104,52.94l48,24V203.06l-48-24ZM40,62.25l48-12v127.5l-48,12Zm176,131.5-48,12V78.25l48-12Z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-bold leading-normal tracking-[0.015em]">Maps</p>
+                    </a>
+                    <a class="nav-link flex flex-col items-center justify-center border-b-[3px] gap-1 pb-[7px] pt-2.5 flex-1" href="marketplace.html" data-page="marketplace">
+                        <div class="text-[#1C160C]" data-icon="ShoppingCart">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M222.14,58.87A8,8,0,0,0,216,56H54.68L49.79,29.14A16,16,0,0,0,34.05,16H16a8,8,0,0,0,0,16h18L59.56,172.29a24,24,0,0,0,5.33,11.27,28,28,0,1,0,44.4,8.44h45.42A27.75,27.75,0,0,0,152,204a28,28,0,1,0,28-28H83.17a8,8,0,0,1-7.87-6.57L72.13,152h116a24,24,0,0,0,23.61-19.71l12.16-66.86A8,8,0,0,0,222.14,58.87ZM96,204a12,12,0,1,1-12-12A12,12,0,0,1,96,204Zm96,0a12,12,0,1,1-12-12A12,12,0,0,1,192,204Zm4-74.57A8,8,0,0,1,188.1,136H69.22L57.59,72H206.41Z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-bold leading-normal tracking-[0.015em]">Market</p>
+                    </a>
+                    <a class="nav-link flex flex-col items-center justify-center border-b-[3px] gap-1 pb-[7px] pt-2.5 flex-1" href="calculator.html" data-page="calculator">
+                        <div class="text-[#A18249]" data-icon="Calculator">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px" fill="currentColor" viewBox="0 0 256 256">
+                                <path d="M200,32H56A24,24,0,0,0,32,56V200a24,24,0,0,0,24,24H200a24,24,0,0,0,24-24V56A24,24,0,0,0,200,32Zm8,168a8,8,0,0,1-8,8H56a8,8,0,0,1-8-8V56a8,8,0,0,1,8-8H200a8,8,0,0,1,8,8ZM76,80V64a8,8,0,0,1,16,0V80a8,8,0,0,1-16,0Zm0,40V104a8,8,0,0,1,16,0v16a8,8,0,0,1-16,0Zm88,0V104a8,8,0,0,1,16,0v16a8,8,0,0,1-16,0Zm0-40V64a8,8,0,0,1,16,0V80a8,8,0,0,1-16,0Zm-44,0V64a8,8,0,0,1,16,0V80a8,8,0,0,1-16,0Zm0,40V104a8,8,0,0,1,16,0v16a8,8,0,0,1-16,0Zm-44,44a8,8,0,0,1,8-8h88a8,8,0,0,1,0,16H84A8,8,0,0,1,76,164Zm8,24h88a8,8,0,0,1,0,16H84a8,8,0,0,1,0-16Z"></path>
+                            </svg>
+                        </div>
+                        <p class="text-sm font-bold leading-normal tracking-[0.015em]">Calculator</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    let pyodide;
+    let recommendationSystem;
+    let cars = [];
+
+    async function initPyodide() {
+        pyodide = await loadPyodide();
+        await pyodide.loadPackage("numpy");
+        await pyodide.runPythonAsync(`
+            ${await (await fetch('recommendation_system.py')).text()}
+        `);
+        
+        // Load saved cars from localStorage
+        const savedCars = localStorage.getItem('cars');
+        if (savedCars) {
+            cars = JSON.parse(savedCars);
+        }
+        
+        // Update Python with the loaded cars
+        updatePythonCars();
+        
+        recommendationSystem = pyodide.globals.get('SimpleHybridRecommendationSystem')(pyodide.globals.get('cars'), pyodide.globals.get('user_ratings'));
+    }
+
+    function updatePythonCars() {
+        pyodide.globals.set('cars', cars);
+        pyodide.runPython(`
+            cars = cars.to_py()
+            recommendation_system = SimpleHybridRecommendationSystem(cars, user_ratings)
+        `);
+    }
+
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+        document.getElementById(pageId).classList.add('active');
+        if (pageId === 'buy') {
+            renderCarListings();
+            fetchRecommendations();
+        }
+        // Update URL hash
+        window.location.hash = pageId;
+    }
+
+    // Handle navigation based on URL hash
+    function handleHashChange() {
+        const hash = window.location.hash.slice(1);
+        if (hash && ['selection', 'buy', 'sell'].includes(hash)) {
+            showPage(hash);
+        } else {
+            showPage('selection');
+        }
+    }
+
+    // Initialize the page
+    window.addEventListener('load', async () => {
+        await initPyodide();
+        handleHashChange();
+    });
+
+    // Listen for hash changes
+    window.addEventListener('hashchange', handleHashChange);
+
+    function renderCarListings(filter = 'all') {
+        const carListings = document.getElementById('carListings');
+        carListings.innerHTML = '';
+        cars.forEach(car => {
+            if ((filter === 'all' || car.fuelType.toLowerCase() === filter) && !car.sold) {
+                const carElement = document.createElement('div');
+                carElement.className = 'flex flex-col gap-3 pb-3 bg-white rounded-lg overflow-hidden custom-shadow';
+                carElement.innerHTML = `
+                    <div class="w-full bg-center bg-no-repeat aspect-video bg-cover" style="background-image: url('${car.image}');"></div>
+                    <div class="p-4">
+                        <p class="text-[#1C160C] text-lg font-medium leading-normal">${car.year} ${car.make} ${car.model}</p>
+                        <p class="text-[#A18249] text-sm font-normal leading-normal mb-2">$${car.price.toLocaleString()} - ${car.mileage.toLocaleString()} miles</p>
+                        <p class="text-[#1C160C] text-sm font-normal leading-normal mb-4">${car.fuelType} | ${car.transmission}</p>
+                        <button onclick="showCarDetails(${car.id})" class="w-full bg-[#019863] text-white font-bold py-2 px-4 rounded hover:bg-[#017A4E] transition duration-300">View Details</button>
+                    </div>
+                `;
+                carListings.appendChild(carElement);
+            }
+        });
+    }
+
+    async function fetchRecommendations() {
+        if (!pyodide) {
+            await initPyodide();
+        }
+
+        const userId = 0; // Replace with actual user ID when you have user authentication
+        const recommendations = recommendationSystem.get_recommendations(userId, 0).toJs();
+        
+        const recommendedCars = document.getElementById('recommendedCars');
+        recommendedCars.innerHTML = '';
+        recommendations.forEach(car => {
+            if (!car.sold) {
+                const carElement = document.createElement('div');
+                carElement.className = 'flex items-center space-x-4 bg-[#F4EFE6] p-4 rounded-lg';
+                carElement.innerHTML = `
+                    <img src="${car.image}" alt="${car.make} ${car.model}" class="w-24 h-24 object-cover rounded-md">
+                    <div>
+                        <h4 class="font-semibold text-[#1C160C]">${car.year} ${car.make} ${car.model}</h4>
+                        <p class="text-[#A18249]">$${car.price.toLocaleString()}</p>
+                        <button onclick="showCarDetails(${car.id})" class="mt-2 text-sm bg-[#019863] text-white font-bold py-1 px-3 rounded hover:bg-[#017A4E] transition duration-300">View</button>
+                    </div>
+                `;
+                recommendedCars.appendChild(carElement);
+            }
+        });
+    }
+
+    function showCarDetails(carId) {
+        const car = cars.find(c => c.id === carId);
+        if (car) {
+            const result = confirm(`
+                ${car.year} ${car.make} ${car.model}
+                Price: $${car.price.toLocaleString()}
+                Mileage: ${car.mileage.toLocaleString()} miles
+                Fuel Type: ${car.fuelType}
+                Transmission: ${car.transmission}
+
+                Would you like to mark this car as sold?
+            `);
+            if (result) {
+                markAsSold(carId);
+            }
+        }
+    }
+
+    function markAsSold(carId) {
+        const carIndex = cars.findIndex(c => c.id === carId);
+        if (carIndex !== -1) {
+            cars[carIndex].sold = true;
+            saveCars();
+            updatePythonCars();
+            renderCarListings();
+            fetchRecommendations();
+            alert('Car marked as sold!');
+        }
+    }
+
+    document.getElementById('listingForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const newCar = Object.fromEntries(formData.entries());
+        newCar.id = Date.now(); // Use timestamp as unique ID
+        newCar.price = parseInt(newCar.price);
+        newCar.mileage = parseInt(newCar.mileage);
+        newCar.year = parseInt(newCar.year);
+        newCar.sold = false; // Add sold status
+        cars.push(newCar);
+        saveCars();
+        updatePythonCars();
+        alert('Your car has been listed successfully!');
+        e.target.reset();
+        showPage('buy');
+    });
+
+    function saveCars() {
+        localStorage.setItem('cars', JSON.stringify(cars));
+    }
+
+    // Add event listeners for filter buttons
+    document.querySelectorAll('.flex.gap-3.p-3.flex-wrap.pr-4.mb-6 button').forEach(button => {
+        button.addEventListener('click', function() {
+            const filter = this.textContent.trim().toLowerCase();
+            renderCarListings(filter === 'all cars' ? 'all' : filter);
+        });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const navLinks = document.querySelectorAll('.nav-link');
+        const currentPage = window.location.pathname.split('/').pop().split('.')[0];
+
+        // Navigation functionality
+        navLinks.forEach(link => {
+            const linkPage = link.getAttribute('data-page');
+            if (linkPage === currentPage) {
+                link.classList.add('border-b-[#019863]');
+                link.querySelector('div').classList.remove('text-[#A18249]');
+                link.querySelector('div').classList.add('text-[#1C160C]');
+            } else {
+                link.classList.remove('border-b-[#019863]');
+                link.querySelector('div').classList.remove('text-[#1C160C]');
+                link.querySelector('div').classList.add('text-[#A18249]');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

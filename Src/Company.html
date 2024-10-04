@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Company Support - India</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        main {
+            flex: 1;
+            max-width: 1200px;
+            margin: 20px auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .header {
+            background-color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-weight: bold;
+        }
+
+        .company-selector {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .company-info {
+            display: none;
+            grid-template-columns: 1fr 2fr;
+            gap: 20px;
+        }
+
+        .company-logo {
+            width: 150px;
+            height: 150px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .company-logo img {
+            width: 100px;
+        }
+
+        .company-details {
+            text-align: left;
+        }
+
+        .follow-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background-color: #10a37f;
+            color: white;
+        }
+
+        .btn-secondary {
+            background-color: #f0f0f0;
+            color: black;
+        }
+
+        .customer-support {
+            margin-top: 20px;
+        }
+
+        .support-message {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .vehicle-info {
+            margin-top: 20px;
+        }
+
+        .vehicle-info table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .vehicle-info td {
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .chat-interface {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .chat-messages {
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+
+        .chat-input {
+            display: flex;
+        }
+
+        .chat-input input {
+            flex-grow: 1;
+            padding: 5px;
+        }
+
+        .profile-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-icon {
+            width: 30px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .show {
+            display: block;
+        }
+
+        footer {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            background-color: white;
+        }
+
+        footer div {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        footer a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            text-decoration: none;
+            color: #A18249;
+            padding: 10px 0;
+            border-bottom: 3px solid transparent;
+        }
+
+        footer a:hover {
+            border-bottom-color: #019863;
+        }
+
+        footer a[href="company.html"] {
+            border-bottom-color: #019863;
+        }
+
+        footer a p {
+            font-size: 14px;
+            font-weight: bold;
+            line-height: normal;
+            letter-spacing: 0.015em;
+            margin: 0;
+        }
+
+        .vehicle-selector {
+            margin-top: 20px;
+        }
+
+        .vehicle-selector select, .vehicle-selector input {
+            margin-bottom: 10px;
+            padding: 5px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">◆ Car Company Support - India</div>
+        <div class="profile-dropdown">
+            <div class="profile-icon" onclick="toggleDropdown()"></div>
+            <div id="profileDropdown" class="dropdown-content">
+                <a href="#">Profile</a>
+                <a href="#">Settings</a>
+                <a href="#">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <section class="company-selector">
+            <h2>Select a car company:</h2>
+            <select id="companySelect">
+                <option value="">Choose a company</option>
+                <option value="maruti">Maruti Suzuki</option>
+                <option value="hyundai">Hyundai</option>
+                <option value="tata">Tata Motors</option>
+                <option value="mahindra">Mahindra</option>
+                <option value="kia">Kia</option>
+                <option value="toyota">Toyota</option>
+                <option value="honda">Honda</option>
+                <option value="ford">Ford</option>
+                <option value="renault">Renault</option>
+                <option value="volkswagen">Volkswagen</option>
+                <option value="skoda">Skoda</option>
+                <option value="mg">MG Motor</option>
+                <option value="nissan">Nissan</option>
+            </select>
+        </section>
+
+        <section id="companyInfo" class="company-info">
+            <div class="company-logo">
+                <img id="companyLogo" src="" alt="Company Logo">
+            </div>
+            <div class="company-details">
+                <h1 id="companyName"></h1>
+                <p id="companyDescription"></p>
+                <p id="companyFollowers"></p>
+                <div class="follow-buttons">
+                    <button class="btn btn-primary" id="followBtn">Follow</button>
+                    <button class="btn btn-secondary" id="messageBtn">Message</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="vehicle-selector" id="vehicleSelector">
+            <h2>Select your vehicle:</h2>
+            <select id="modelSelect">
+                <option value="">Choose a model</option>
+            </select>
+            <input type="text" id="registrationInput" placeholder="Enter registration number">
+            <input type="number" id="mileageInput" placeholder="Enter mileage">
+            <input type="date" id="purchaseDateInput" placeholder="Enter purchase date">
+            <input type="text" id="vinInput" placeholder="Enter VIN">
+            <button id="saveVehicleBtn" class="btn btn-primary">Save Vehicle Details</button>
+        </section>
+
+        <section class="vehicle-info" id="vehicleInfo" style="display: none;">
+            <h2>Vehicle Information</h2>
+            <table>
+                <tr>
+                    <td>Model:</td>
+                    <td id="vehicleModel"></td>
+                </tr>
+                <tr>
+                    <td>Registration:</td>
+                    <td id="vehicleRegistration"></td>
+                </tr>
+                <tr>
+                    <td>Mileage:</td>
+                    <td id="vehicleMileage"></td>
+                </tr>
+                <tr>
+                    <td>Purchase Date:</td>
+                    <td id="vehiclePurchaseDate"></td>
+                </tr>
+                <tr>
+                    <td>Age:</td>
+                    <td id="vehicleAge"></td>
+                </tr>
+                <tr>
+                    <td>VIN:</td>
+                    <td id="vehicleVIN"></td>
+                </tr>
+            </table>
+            <button id="editVehicleBtn" class="btn btn-secondary">Edit Vehicle Details</button>
+        </section>
+
+        <section class="customer-support">
+            <h2>Customer Support</h2>
+            <div class="support-message">
+                <strong id="supportCompanyName"></strong>
+                <p>Hello! How can we assist you today?</p>
+            </div>
+            <button class="btn btn-secondary" id="helpBtn">Help</button>
+            <button class="btn btn-secondary" id="contactBtn" style="float: right;">Contact Us</button>
+            
+            <div class="chat-interface" id="chatInterface">
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Type your message...">
+                    <button class="btn btn-primary" id="sendBtn">Send</button>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div>
+            <a href="community.html">
+                <p>Community</p>
+            </a>
+            <a href="company.html">
+                <p>Company</p>
+            </a>
+            <a href="Maps.html">
+                <p>Maps</p>
+            </a>
+            <a href="Marketplace.html">
+                <p>Market</p>
+            </a>
+            <a href="Calculator.html">
+                <p>Calculator</p>
+            </a>
+        </div>
+    </footer>
+
+    <script>
+        const companies = {
+            maruti: {
+                name: "Maruti Suzuki",
+                logo: "maruti-logo.png",
+                description: "India's largest passenger car company",
+                followers: "2.5M followers",
+                models: ["Swift", "Baleno", "Dzire", "Alto", "Vitara Brezza"]
+            },
+            hyundai: {
+                name: "Hyundai",
+                logo: "hyundai-logo.png",
+                description: "Second largest car manufacturer in India",
+                followers: "2.1M followers",
+                models: ["Creta", "i20", "Venue", "Verna", "Grand i10 Nios"]
+            },
+            tata: {
+                name: "Tata Motors",
+                logo: "tata-logo.png",
+                description: "Indian multinational automotive manufacturing company",
+                followers: "1.8M followers",
+                models: ["Nexon", "Altroz", "Harrier", "Tiago", "Safari"]
+            },
+            mahindra: {
+                name: "Mahindra",
+                logo: "mahindra-logo.png",
+                description: "Indian multinational car manufacturing corporation",
+                followers: "1.5M followers",
+                models: ["XUV700", "Thar", "Scorpio", "XUV300", "Bolero"]
+            },
+            kia: {
+                name: "Kia",
+                logo: "kia-logo.png",
+                description: "South Korean automobile manufacturer in India",
+                followers: "1.2M followers",
+                models: ["Seltos", "Sonet", "Carnival", "Carens"]
+            },
+            toyota: {
+                name: "Toyota",
+                logo: "toyota-logo.png",
+                description: "Japanese multinational automotive manufacturer",
+                followers: "1.7M followers",
+                models: ["Innova Crysta", "Fortuner", "Glanza", "Urban Cruiser", "Camry"]
+            },
+            honda: {
+                name: "Honda",
+                logo: "honda-logo.png",
+                description: "Japanese multinational automotive manufacturer",
+                followers: "1.4M followers",
+                models: ["City", "Amaze", "WR-V", "Jazz"]
+            },
+            ford: {
+                name: "Ford",
+                logo: "ford-logo.png",
+                description: "American multinational automaker",
+                followers: "1.3M followers",
+                models: ["EcoSport", "Endeavour", "Figo", "Aspire"]
+            },
+            renault: {
+                name: "Renault",
+                logo: "renault-logo.png",
+                description: "French multinational automobile manufacturer",
+                followers: "1.1M followers",
+                models: ["Kwid", "Triber", "Duster", "Kiger"]
+            },
+            volkswagen: {
+                name: "Volkswagen",
+                logo: "volkswagen-logo.png",
+                description: "German motor vehicle manufacturer",
+                followers: "1M followers",
+                models: ["Polo", "Vento", "T-Roc", "Tiguan"]
+            },
+            skoda: {
+                name: "Skoda",
+                logo: "skoda-logo.png",
+                description: "Czech automobile manufacturer",
+                followers: "900K followers",
+                models: ["Rapid", "Octavia", "Superb", "Kushaq"]
+            },
+            mg: {
+                name: "MG Motor",
+                logo: "mg-logo.png",
+                description: "British automotive company owned by SAIC Motor",
+                followers: "800K followers",
+                models: ["Hector", "ZS EV", "Gloster", "Astor"]
+            },
+            nissan: {
+                name: "Nissan",
+                logo: "nissan-logo.png",
+                description: "Japanese multinational automobile manufacturer",
+                followers: "750K followers",
+                models: ["Magnite", "Kicks"]
+            }
+        };
+
+        const companySelect = document.getElementById('companySelect');
+        const modelSelect = document.getElementById('modelSelect');
+        const saveVehicleBtn = document.getElementById('saveVehicleBtn');
+        const editVehicleBtn = document.getElementById('editVehicleBtn');
+        const vehicleSelector = document.getElementById('vehicleSelector');
+        const vehicleInfo = document.getElementById('vehicleInfo');
+
+        companySelect.addEventListener('change', function() {
+            const selectedCompany = this.value;
+            if (selectedCompany) {
+                const company = companies[selectedCompany];
+                document.getElementById('companyInfo').style.display = 'grid';
+                document.getElementById('companyLogo').src = company.logo;
+                document.getElementById('companyName').textContent = company.name;
+                document.getElementById('companyDescription').textContent = company.description;
+                document.getElementById('companyFollowers').textContent = company.followers;
+                document.getElementById('supportCompanyName').textContent = company.name;
+
+                // Populate model select
+                modelSelect.innerHTML = '<option value="">Choose a model</option>';
+                company.models.forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model;
+                    option.textContent = model;
+                    modelSelect.appendChild(option);
+                });
+            } else {
+                document.getElementById('companyInfo').style.display = 'none';
+                modelSelect.innerHTML = '<option value="">Choose a model</option>';
+            }
+        });
+
+        saveVehicleBtn.addEventListener('click', function() {
+            const model = modelSelect.value;
+            const registration = document.getElementById('registrationInput').value;
+            const mileage = document.getElementById('mileageInput').value;
+            const purchaseDate = document.getElementById('purchaseDateInput').value;
+            const vin = document.getElementById('vinInput').value;
+
+            if (model && registration && mileage && purchaseDate && vin) {
+                document.getElementById('vehicleModel').textContent = model;
+                document.getElementById('vehicleRegistration').textContent = registration;
+                document.getElementById('vehicleMileage').textContent = mileage + ' km';
+                document.getElementById('vehiclePurchaseDate').textContent = purchaseDate;
+                document.getElementById('vehicleVIN').textContent = vin;
+
+                // Calculate vehicle age
+                const age = calculateAge(purchaseDate);
+                document.getElementById('vehicleAge').textContent = age;
+
+                // Hide vehicle selector and show vehicle info
+                vehicleSelector.style.display = 'none';
+                vehicleInfo.style.display = 'block';
+            } else {
+                alert('Please fill in all vehicle details');
+            }
+        });
+
+        editVehicleBtn.addEventListener('click', function() {
+            // Show vehicle selector and hide vehicle info
+            vehicleSelector.style.display = 'block';
+            vehicleInfo.style.display = 'none';
+        });
+
+        function calculateAge(purchaseDate) {
+            const purchase = new Date(purchaseDate);
+            const today = new Date();
+            const diffTime = Math.abs(today - purchase);
+            const diffYears = Math.floor(diffTime / (1000 * 60 * 60 * 24 * 365));
+            return diffYears + (diffYears === 1 ? ' year' : ' years');
+        }
+
+        // Follow button functionality
+        document.getElementById('followBtn').addEventListener('click', function() {
+            this.textContent = this.textContent === 'Follow' ? 'Following' : 'Follow';
+            this.classList.toggle('btn-primary');
+            this.classList.toggle('btn-secondary');
+        });
+
+        // Message button functionality
+        document.getElementById('messageBtn').addEventListener('click', function() {
+            document.getElementById('chatInterface').style.display = 'block';
+        });
+
+        // Help button functionality
+        document.getElementById('helpBtn').addEventListener('click', function() {
+            alert('Our help center is currently under maintenance. Please try again later.');
+        });
+
+        // Contact Us button functionality
+        document.getElementById('contactBtn').addEventListener('click', function() {
+            const company = document.getElementById('companyName').textContent.toLowerCase().replace(' ', '');
+            window.location.href = `mailto:support@${company}.com`;
+        });
+
+        // Chat functionality
+        document.getElementById('sendBtn').addEventListener('click', sendMessage);
+        document.getElementById('chatInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                const chatMessages = document.getElementById('chatMessages');
+                chatMessages.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+                input.value = '';
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Simulate a response
+                setTimeout(() => {
+                    const company = document.getElementById('companyName').textContent;
+                    chatMessages.innerHTML += `<p><strong>${company} Support:</strong> Thank you for your message. A support representative will be with you shortly.</p>`;
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
+        }
+
+        // Profile dropdown functionality
+        function toggleDropdown() {
+            document.getElementById('profileDropdown').classList.toggle('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.matches('.profile-icon')) {
+                var dropdowns = document.getElementsByClassName('dropdown-content');
+                for (var i = 0; i < dropdowns.length; i++) {
+                    var openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains('show')) {
+                        openDropdown.classList.remove('show');
+                    }
+                }
+            }
+        }
+    </script>
+</body>
+</html>
